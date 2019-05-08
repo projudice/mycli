@@ -9,37 +9,30 @@ module.exports = function(creator, options, callback) {
   const cwd = process.cwd();
   // 项目目录
   const projectPath = path.join(cwd, name);
-  const buildPath = path.join(projectPath, 'build');
-  const pagePath = path.join(projectPath, 'page');
   const srcPath = path.join(projectPath, 'src');
+  const distPath = path.join(projectPath, 'dist');
+
 
   // 新建项目目录
   // 同步创建目录，以免文件目录不对齐
   fs.mkdirSync(projectPath);
-  fs.mkdirSync(buildPath);
-  fs.mkdirSync(pagePath);
   fs.mkdirSync(srcPath);
+  fs.mkdirSync(distPath);
 
   creator.copyTpl('packagejson', path.join(projectPath, 'package.json'), {
     name,
     description,
   });
 
-  creator.copy('build/build.js', path.join(buildPath, 'build.js'));
-
-  creator.copy('page/index.html', path.join(pagePath, 'index.html'));
-
-  creator.copy('src/index.js', path.join(srcPath, 'index.js'));
+  creator.copy('dist/.gitkeep', path.join(distPath, '.gitkeep'));
+  creator.copy('src/main.js', path.join(srcPath, 'main.js'));
+  creator.copy('src/App.vue', path.join(srcPath, 'App.vue'));
+  creator.copy('index.html', path.join(projectPath, 'index.html'));
+  creator.copy('.babelrc', path.join(projectPath, '.babelrc'));
 
   creator.fs.commit(() => {
     console.log();
     console.log(`${chalk.grey(`创建项目: ${name}`)} ${chalk.green('✔ ')}`);
-    console.log(`${chalk.grey(`创建目录: ${name}/build`)} ${chalk.green('✔ ')}`);
-    console.log(`${chalk.grey(`创建目录: ${name}/page`)} ${chalk.green('✔ ')}`);
-    console.log(`${chalk.grey(`创建目录: ${name}/src`)} ${chalk.green('✔ ')}`);
-    console.log(`${chalk.grey(`创建文件: ${name}/build/build.js`)} ${chalk.green('✔ ')}`);
-    console.log(`${chalk.grey(`创建文件: ${name}/page/index.html`)} ${chalk.green('✔ ')}`);
-    console.log(`${chalk.grey(`创建文件: ${name}/src/index.js`)} ${chalk.green('✔ ')}`);
 
     callback();
   });
