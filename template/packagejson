@@ -5,6 +5,7 @@
   "author": "",
   "private": true,
   "scripts": {
+    "test": "echo \"you need a test.js\" && exit 1"
     "watchify": "watchify -vd -p browserify-hmr -e src/main.js -o dist/build.js",
     "serve": "http-server -o -s -c 1 -a localhost",
     "dev": "npm-run-all --parallel watchify serve",
