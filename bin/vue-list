@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+const logger = require('../lib/logger')
+const request = require('request')
+const chalk = require('chalk')
+
+/**
+ * Padding.
+ */
+
+console.log()
+process.on('exit', () => {
+  console.log()
+})
+
+/**
+ * List repos.
+ */
+request({
+  url: 'https://api.github.com/users/projudice/repos',
+  headers: {
+    'User-Agent': 'projudice'
+  }
+}, (err, res, body) => {
+  if (err) logger.fatal(err)
+  const requestBody = JSON.parse(body)
+  if (Array.isArray(requestBody)) {
+    console.log()
+    console.log('  individual templates:')
+    console.log()
+    requestBody.forEach(repo => {
+      // eslint-disable-next-line eqeqeq
+      if (repo.name.match(/-template$/)) {
+        console.log(
+          '  ' + chalk.yellow('★') +
+          '  ' + chalk.blue(repo.name) +
+          ' - ' + repo.description)
+      }
+    })
+  } else {
+    console.error(requestBody.message)
+  }
+})
+
+request({
+  url: 'https://api.github.com/users/vuejs-templates/repos',
+  headers: {
+    'User-Agent': 'vue-cli'
+  }
+}, (err, res, body) => {
+  if (err) logger.fatal(err)
+  const requestBody = JSON.parse(body)
+  if (Array.isArray(requestBody)) {
+    console.log()
+    console.log('  Available official templates:')
+    console.log()
+    requestBody.forEach(repo => {
+      console.log(
+        '  ' + chalk.yellow('★') +
+        '  ' + chalk.blue(repo.name) +
+        ' - ' + repo.description)
+    })
+  } else {
+    console.error(requestBody.message)
+  }
+})
